@@ -2,7 +2,9 @@ package com.example.bikram.frankensteinseries;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,28 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyActivity extends Activity {
     private Context context;
@@ -76,6 +100,8 @@ public class MyActivity extends Activity {
             eventName = ((EditText) findViewById(R.id.event_name)).getText().toString().toLowerCase();
             System.out.println("Event Details");
             System.out.println(actorName +" "+ eventName +"  "+ " "+ timeday + "  " +stage   );
+            Log.d("test connection","" + isConnected());
+            postData();
         }
     });
     }
@@ -98,5 +124,92 @@ public class MyActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
+
+    public void postData() {
+        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+                String paramUsername = params[0];
+                String paramPassword = params[1];
+
+                System.out.println("*** doInBackground ** paramUsername " + paramUsername + " paramPassword :" + paramPassword);
+
+                HttpClient client = new DefaultHttpClient();
+
+                // In a POST request, we don't pass the values in the URL.
+                //Therefore we use only the web page URL as the parameter of the HttpPost argument
+                //HttpPost httpPost = new HttpPost("http://139.147.33.170:8000/index");
+
+                try {
+                    // UrlEncodedFormEntity is an entity composed of a list of url-encoded pairs.
+                    //This is typically useful while sending an HTTP POST request.
+
+                    // setEntity() hands the entity (here it is urlEncodedFormEntity) to the request.
+
+                    HttpGet request = new HttpGet();
+                    request.setURI(new URI("http://139.147.33.170:8000/search/people/?types=[actor]&name=Adam"));
+
+                    try {
+                        // HttpResponse is an interface just like HttpPost.
+                        //Therefore we can't initialize them
+                        HttpResponse response = client.execute(request);
+
+                        // According to the JAVA API, InputStream constructor do nothing.
+                        //So we can't initialize InputStream although it is not an interface
+                        InputStream inputStream = response.getEntity().getContent();
+
+                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                        StringBuilder stringBuilder = new StringBuilder();
+
+                        String bufferedStrChunk = null;
+
+                        String str = "";
+
+                        while((bufferedStrChunk = bufferedReader.readLine()) != null){
+                            //Log.d("in loop", stringBuilder.toString());
+                            //stringBuilder.append(bufferedStrChunk);
+                            str += bufferedStrChunk + '\n';
+                            if (str.length() > 2000/* && bufferedStrChunk.contains("<!DOCTYPE html>")*/)
+                                break;
+                        }
+
+                        Log.e("",str);
+
+                        Log.d("any return?", stringBuilder.toString());
+
+                        return stringBuilder.toString();
+
+                    }
+                    catch (ClientProtocolException cpe) {
+                        cpe.printStackTrace();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (URISyntaxException urie) {
+                    urie.printStackTrace();
+                }
+
+                return null;
+            }
+        }
+        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+        sendPostReqAsyncTask.execute("/search", "/people");
+        Log.d("?","?");
     }
 }
