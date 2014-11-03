@@ -1,0 +1,102 @@
+package com.example.bikram.frankensteinseries;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TimePicker;
+
+
+public class MyActivity extends Activity {
+    private Context context;
+    private boolean searchByTime;
+    private String stage;
+    private String timeday;
+    private String actorName;
+    private String eventName;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my);
+
+
+        context = this.getApplicationContext();
+
+        // Spinner to select day of week
+        Spinner spinner = (Spinner) findViewById(R.id.daySpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.day_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                timeday = parent.getItemAtPosition(pos).toString().toLowerCase();
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                timeday = "";
+            }
+        });
+
+
+        // Spinner to select stage
+        Spinner spinner1 = (Spinner) findViewById(R.id.stageSpinner);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+                R.array.array_stage, android.R.layout.simple_spinner_item);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner1.setAdapter(adapter1);
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                stage = parent.getItemAtPosition(pos).toString().toLowerCase();
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                stage = "";
+            }
+        });
+
+        // Search for the field
+        Button searchButton = (Button) findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+            public void onClick(View v) {
+            actorName = ((EditText) findViewById(R.id.actors_name)).getText().toString().toLowerCase();
+            eventName = ((EditText) findViewById(R.id.event_name)).getText().toString().toLowerCase();
+            System.out.println("Event Details");
+            System.out.println(actorName +" "+ eventName +"  "+ " "+ timeday + "  " +stage   );
+        }
+    });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.my, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

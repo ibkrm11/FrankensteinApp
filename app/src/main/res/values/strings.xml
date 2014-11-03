@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cool">#CDC5BF</color>
+    <string name="app_name">Frankenstein</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="day_array">
+        <item></item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string name="event_name">Enter the event name</string>
+    <string-array name="array_stage">
+        <item></item>
+        <item>Stage1</item>
+        <item>Stage2</item>
+        <item>Stage3</item>
+        <item>Stage4</item>
+        <item>Stage5</item>
+    </string-array>
+    <string name="day_choose">Select a Day</string>
+    <string name="stage_choose">Select a Stage</string>
+    <string name="search_time"> Search by Time</string>
+</resources>
