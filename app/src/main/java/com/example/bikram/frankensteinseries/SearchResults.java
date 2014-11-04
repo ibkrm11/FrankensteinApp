@@ -31,11 +31,12 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Bikram on 11/3/2014.
  */
-public class SearchResults extends ListActivity{
+public class SearchResults extends ListActivity implements AsynResponse{
 
     public static final String EXTRA_ACTOR = "com.android.bikram.frankensteinseries.actor";
 
@@ -120,72 +121,91 @@ public class SearchResults extends ListActivity{
     }
 
     public String postData(String type, String name) {
-        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
-            @Override
-            protected String doInBackground(String... params) {
-                String type = params[0];
-                String name = params[1];
 
-                HttpClient client = new DefaultHttpClient();
-                HttpGet request = new HttpGet();
-                String hostName = "http://139.147.24.15:8000";
-                String urlName = hostName += "/search/people/?android=true";
-                if (name.length() > 0) {
-                    try {
-                        urlName += "&types=[" + type + "]&name=" + URLEncoder.encode(name, "UTF-8").replace("+", "%20");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.d("url",urlName);
-                try {
-                    request.setURI(new URI(urlName));
-                    try {
-                        // HttpResponse is an interface just like HttpPost.
-                        // Therefore we can't initialize them
-                        HttpResponse response = client.execute(request);
-
-                        // According to the JAVA API, InputStream constructor do nothing.
-                        //So we can't initialize InputStream although it is not an interface
-                        InputStream inputStream = response.getEntity().getContent();
-
-                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                        StringBuilder stringBuilder = new StringBuilder();
-
-                        String bufferedStrChunk = null;
-
-                        while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
-                            stringBuilder.append(bufferedStrChunk + '\n');
-                            if (bufferedStrChunk.contains("</html>")) {
-                                throw new RuntimeException("get html file instead of json");
-                            }
-                        }
-                        return stringBuilder.toString();
-                    } catch (ClientProtocolException cpe) {
-                        cpe.printStackTrace();
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-
-                } catch (URISyntaxException urie) {
-                    urie.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-        }
         if (type.length() <= 0) {
             return null;
         } else {
-            SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
-            sendPostReqAsyncTask.execute(type, name);
+            SenGetReqAsyncTask asyncTask = new SenGetReqAsyncTask(this);
+            asyncTask.execute(type, name);
         }
         return "";
+    }
+
+    @Override
+    public void processFinish(String output){
+        Log.d("??",output);
+    }
+
+    private class SenGetReqAsyncTask extends AsyncTask<String, Void, String> {
+
+        AsynResponse delegate=null;
+
+        public SenGetReqAsyncTask(AsynResponse as){
+            delegate = as;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            delegate.processFinish(result);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String type = params[0];
+            String name = params[1];
+
+            HttpClient client = new DefaultHttpClient();
+            HttpGet request = new HttpGet();
+            String hostName = "http://139.147.24.15:8000";
+            String urlName = hostName += "/search/people/?android=true";
+            if (name.length() > 0) {
+                try {
+                    urlName += "&types=[" + type + "]&name=" + URLEncoder.encode(name, "UTF-8").replace("+", "%20");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.d("url",urlName);
+            try {
+                request.setURI(new URI(urlName));
+                try {
+                    // HttpResponse is an interface just like HttpPost.
+                    // Therefore we can't initialize them
+                    HttpResponse response = client.execute(request);
+
+                    // According to the JAVA API, InputStream constructor do nothing.
+                    //So we can't initialize InputStream although it is not an interface
+                    InputStream inputStream = response.getEntity().getContent();
+
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    String bufferedStrChunk = null;
+
+                    while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(bufferedStrChunk + '\n');
+                        if (bufferedStrChunk.contains("</html>")) {
+                            throw new RuntimeException("get html file instead of json");
+                        }
+                    }
+                    return stringBuilder.toString();
+                } catch (ClientProtocolException cpe) {
+                    cpe.printStackTrace();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+
+            } catch (URISyntaxException urie) {
+                urie.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 
 }
