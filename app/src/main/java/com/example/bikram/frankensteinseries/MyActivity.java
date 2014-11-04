@@ -96,12 +96,11 @@ public class MyActivity extends Activity {
         searchButton.setOnClickListener(new View.OnClickListener() {
         @Override
             public void onClick(View v) {
-            actorName = ((EditText) findViewById(R.id.actors_name)).getText().toString().toLowerCase();
-            eventName = ((EditText) findViewById(R.id.event_name)).getText().toString().toLowerCase();
-            System.out.println("Event Details");
-            System.out.println(actorName +" "+ eventName +"  "+ " "+ timeday + "  " +stage   );
+            actorName = ((EditText) findViewById(R.id.actors_name)).getText().toString();
+            eventName = ((EditText) findViewById(R.id.event_name)).getText().toString();
+
             Log.d("test connection","" + isConnected());
-            postData();
+            postData(actorName,eventName,timeday);
         }
     });
     }
@@ -135,14 +134,13 @@ public class MyActivity extends Activity {
             return false;
     }
 
-    public void postData() {
+    public void postData(String actor, String event, String date) {
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
-                String paramUsername = params[0];
-                String paramPassword = params[1];
-
-                System.out.println("*** doInBackground ** paramUsername " + paramUsername + " paramPassword :" + paramPassword);
+                String actor = params[0];
+                String event = params[1];
+                String date = params[2];
 
                 HttpClient client = new DefaultHttpClient();
 
@@ -157,7 +155,12 @@ public class MyActivity extends Activity {
                     // setEntity() hands the entity (here it is urlEncodedFormEntity) to the request.
 
                     HttpGet request = new HttpGet();
-                    request.setURI(new URI("http://139.147.33.170:8000/search/people/?types=[actor]&name=Adam"));
+                    String hostName = "http://139.147.24.15:8000";
+                    String urlName = hostName += "/search/people/?android=true";
+                    if (actor.length() > 0) {
+                        urlName += "&types=[actor]&name=" + actor;
+                    }
+                    request.setURI(new URI(urlName));
 
                     try {
                         // HttpResponse is an interface just like HttpPost.
@@ -176,17 +179,12 @@ public class MyActivity extends Activity {
 
                         String bufferedStrChunk = null;
 
-                        String str = "";
-
                         while((bufferedStrChunk = bufferedReader.readLine()) != null){
                             //Log.d("in loop", stringBuilder.toString());
-                            //stringBuilder.append(bufferedStrChunk);
-                            str += bufferedStrChunk + '\n';
-                            if (str.length() > 2000/* && bufferedStrChunk.contains("<!DOCTYPE html>")*/)
-                                break;
+                            stringBuilder.append(bufferedStrChunk + '\n');
+                            if (bufferedStrChunk.contains("</html>"))
+                                throw new RuntimeException("get html file instead of json");
                         }
-
-                        Log.e("",str);
 
                         Log.d("any return?", stringBuilder.toString());
 
@@ -197,19 +195,18 @@ public class MyActivity extends Activity {
                         cpe.printStackTrace();
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
                 } catch (URISyntaxException urie) {
                     urie.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 return null;
             }
         }
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
-        sendPostReqAsyncTask.execute("/search", "/people");
-        Log.d("?","?");
+        sendPostReqAsyncTask.execute(actor,"","");
     }
 }

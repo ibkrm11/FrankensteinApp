@@ -2,7 +2,6 @@
 <resources>
     <color name="cool">#CDC5BF</color>
     <string name="app_name">Frankenstein</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string-array name="day_array">
         <item></item>
