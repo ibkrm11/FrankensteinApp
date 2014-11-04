@@ -1,13 +1,29 @@
 package com.example.bikram.frankensteinseries;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ActionBar;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +64,8 @@ public class SearchResults extends ListActivity{
         setListAdapter(adapter);
         adapter.notifyDataSetChanged();
 
+        postData(actor,event,timeday);
+
     }
     /**
      * Creates options menu
@@ -76,6 +94,75 @@ public class SearchResults extends ListActivity{
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
+
+    public void postData(String actor, String event, String date) {
+        class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+                String actor = params[0];
+                String event = params[1];
+                String date = params[2];
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                String hostName = "http://139.147.24.15:8000";
+                String urlName = hostName += "/search/people/?android=true";
+                if (actor.length() > 0) {
+                    urlName += "&types=[actor]&name=" + actor;
+                }
+                try {
+                    request.setURI(new URI(urlName));
+                    try {
+                        // HttpResponse is an interface just like HttpPost.
+                        // Therefore we can't initialize them
+                        HttpResponse response = client.execute(request);
+
+                        // According to the JAVA API, InputStream constructor do nothing.
+                        //So we can't initialize InputStream although it is not an interface
+                        InputStream inputStream = response.getEntity().getContent();
+
+                        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                        StringBuilder stringBuilder = new StringBuilder();
+
+                        String bufferedStrChunk = null;
+
+                        while ((bufferedStrChunk = bufferedReader.readLine()) != null) {
+                            stringBuilder.append(bufferedStrChunk + '\n');
+                            if (bufferedStrChunk.contains("</html>")) {
+                                throw new RuntimeException("get html file instead of json");
+                            }
+                            Log.d("any return?", stringBuilder.toString());
+                            return stringBuilder.toString();
+                        }
+                    } catch (ClientProtocolException cpe) {
+                        cpe.printStackTrace();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+
+                } catch (URISyntaxException urie) {
+                    urie.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        }
+        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+        sendPostReqAsyncTask.execute(actor,"","");
     }
 
 }

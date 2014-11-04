@@ -42,7 +42,7 @@ public class MyActivity extends Activity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
-                timeday = parent.getItemAtPosition(pos).toString().toLowerCase();
+                timeday = parent.getItemAtPosition(pos).toString();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -60,7 +60,7 @@ public class MyActivity extends Activity {
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
-                stage = parent.getItemAtPosition(pos).toString().toLowerCase();
+                stage = parent.getItemAtPosition(pos).toString();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -73,8 +73,8 @@ public class MyActivity extends Activity {
         searchButton.setOnClickListener(new View.OnClickListener() {
         @Override
             public void onClick(View v) {
-            actorName = ((EditText) findViewById(R.id.actors_name)).getText().toString().toLowerCase();
-            eventName = ((EditText) findViewById(R.id.event_name)).getText().toString().toLowerCase();
+            actorName = ((EditText) findViewById(R.id.actors_name)).getText().toString();
+            eventName = ((EditText) findViewById(R.id.event_name)).getText().toString();
             System.out.println("Event Details");
             System.out.println(actorName +" "+ eventName +"  "+ " "+ timeday + "  " +stage   );
 

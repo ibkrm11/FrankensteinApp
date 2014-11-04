@@ -12,80 +12,84 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="right"
         android:gravity="center" >
-        <TextView
-            android:text="Welcome to the Frankenstein"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize ="40sp" />
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
             <TextView
-                android:text="Actors"
+                android:text="Welcome to the Frankenstein"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"/>
-            <EditText
-                android:id = "@+id/actors_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Enter the name of Actor" />
+                android:textSize ="40sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Actors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"/>
+                <EditText
+                    android:id = "@+id/actors_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter the name of Actor" />
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Event/Performances "
-                android:textSize="24sp" />
-            <EditText
-                android:id = "@+id/event_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Enter the name of Events" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event/Performances "
+                    android:textSize="24sp" />
+                <EditText
+                    android:id = "@+id/event_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter the name of Events" />
 
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATE "
+                    android:textSize="24sp" />
+                <Spinner
+                    android:id="@+id/daySpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/day_array"
+                    android:prompt="@string/day_choose"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="STAGE "
+                    android:textSize="24sp" />
+                <Spinner
+                    android:id="@+id/stageSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_stage"
+                    android:prompt="@string/stage_choose"/>
+            </LinearLayout>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DATE "
-                android:textSize="24sp" />
-            <Spinner
-                android:id="@+id/daySpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/day_array"
-                android:prompt="@string/day_choose"/>
-          </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="STAGE "
-                android:textSize="24sp" />
-            <Spinner
-                android:id="@+id/stageSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/array_stage"
-                android:prompt="@string/stage_choose"/>
-        </LinearLayout>
-
-            <Button
-                android:id="@+id/search_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Search"
-                android:onClick="StartQuery"/>
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:onClick="StartQuery"/>
 
 
     </LinearLayout>
