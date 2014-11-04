@@ -24,6 +24,7 @@ public class MyActivity extends Activity {
     private String timeday;
     private String actorName;
     private String eventName;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,23 @@ public class MyActivity extends Activity {
 
 
         context = this.getApplicationContext();
+
+        //spinner to select the type of character
+        Spinner spinner3 = (Spinner) findViewById(R.id.personType);
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this,
+                R.array.array_type, android.R.layout.simple_spinner_item);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner3.setAdapter(adapter3);
+        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                type = parent.getItemAtPosition(pos).toString();
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+                type = "";
+            }
+        });
 
         // Spinner to select day of week
         Spinner spinner = (Spinner) findViewById(R.id.daySpinner);
@@ -83,6 +101,7 @@ public class MyActivity extends Activity {
             i.putExtra(SearchResults.EXTRA_EVENT, eventName);
             i.putExtra(SearchResults.EXTRA_TIMEDAY, timeday);
             i.putExtra(SearchResults.EXTRA_STAGE, stage);
+            i.putExtra(SearchResults.EXTRA_TYPE, type);
 
             startActivity(i);
         }

@@ -37,11 +37,13 @@ public class SearchResults extends ListActivity{
     public static final String EXTRA_EVENT = "com.android.bikram.frankensteinseries.event";
     public static final String EXTRA_TIMEDAY = "com.android.bikram.frankensteinseries.timeday";
     public static final String EXTRA_STAGE = "com.android.bikram.frankensteinseries.stage";
+    public static final String EXTRA_TYPE = "com.android.bikram.franensteinseries.type";
 
     private String actor;
     private String event;
     private String timeday;
     private String stage;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +54,20 @@ public class SearchResults extends ListActivity{
         event  = getIntent().getStringExtra(EXTRA_EVENT);
         timeday = getIntent().getStringExtra(EXTRA_TIMEDAY);
         stage = getIntent().getStringExtra(EXTRA_STAGE);
+        type = getIntent().getStringExtra(EXTRA_TYPE);
 
-        ArrayList<String> results = new ArrayList<String>();
+        postData(type, actor);
+
+       /* ArrayList<String> results = new ArrayList<String>();
         results.add(actor);
         results.add(event);
         results.add(timeday);
-        results.add(stage);
+        results.add(stage);*/
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, results);
         setListAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
-        postData(actor,event,timeday);
+        adapter.notifyDataSetChanged();*/
 
     }
     /**

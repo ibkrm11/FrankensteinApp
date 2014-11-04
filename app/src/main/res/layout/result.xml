@@ -5,6 +5,7 @@
     android:layout_gravity="center"
     android:orientation="vertical">
     <TextView
+        android:background = "#CDC5BF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_results"

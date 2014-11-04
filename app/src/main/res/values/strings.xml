@@ -28,4 +28,11 @@
     <string name="search_time"> Search by Time</string>
     <string name="search_results">Search Results</string>
     <string name="title_activity_results">ResultsActivity</string>
+    <string name="type_select">Select a type</string>
+    <string-array name="array_type">
+        <item></item>
+        <item>actor</item>
+        <item>crew</item>
+        <item>role</item>
+    </string-array>
 </resources>
