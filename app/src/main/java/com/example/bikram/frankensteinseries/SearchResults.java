@@ -120,7 +120,7 @@ public class SearchResults extends ListActivity{
             return false;
     }
 
-    public List<String> postData(String type, String name) {
+    public String postData(String type, String name) {
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
@@ -133,9 +133,8 @@ public class SearchResults extends ListActivity{
                 String urlName = hostName += "/search/people/?android=true";
                 if (name.length() > 0) {
                     try {
-                        Charset charset = Charset.forName(name);
-                        urlName += "&types=[" + type + "]&name=" + charset.name();
-                    } catch (IllegalCharsetNameException e) {
+                        urlName += "&types=[" + type + "]&name=" + URLEncoder.encode(name, "UTF-8").replace("+", "%20");
+                    } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                 }
@@ -164,9 +163,8 @@ public class SearchResults extends ListActivity{
                             if (bufferedStrChunk.contains("</html>")) {
                                 throw new RuntimeException("get html file instead of json");
                             }
-                            Log.d("any return?", stringBuilder.toString());
-                            return stringBuilder.toString();
                         }
+                        return stringBuilder.toString();
                     } catch (ClientProtocolException cpe) {
                         cpe.printStackTrace();
                     } catch (IOException ioe) {
@@ -188,7 +186,7 @@ public class SearchResults extends ListActivity{
             SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
             sendPostReqAsyncTask.execute(type, name);
         }
-        return new ArrayList<String>();
+        return "";
     }
 
 }
