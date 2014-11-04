@@ -85,21 +85,21 @@ public class MyActivity extends Activity implements AsynResponse {
 
 
         // Spinner to select stage
-        Spinner spinner1 = (Spinner) findViewById(R.id.stageSpinner);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
-                R.array.array_stage, android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner1.setAdapter(adapter1);
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int pos, long id) {
-                stage = parent.getItemAtPosition(pos).toString();
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-                stage = "";
-            }
-        });
+//        Spinner spinner1 = (Spinner) findViewById(R.id.stageSpinner);
+//        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+//                R.array.array_stage, android.R.layout.simple_spinner_item);
+//        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner1.setAdapter(adapter1);
+//        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+//            public void onItemSelected(AdapterView<?> parent, View view,
+//                                       int pos, long id) {
+//                stage = parent.getItemAtPosition(pos).toString();
+//            }
+//
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                stage = "";
+//            }
+//        });
 
         // Search for the field
         Button searchButton = (Button) findViewById(R.id.search_button);
@@ -108,8 +108,6 @@ public class MyActivity extends Activity implements AsynResponse {
             public void onClick(View v) {
             actorName = ((EditText) findViewById(R.id.actors_name)).getText().toString();
             eventName = ((EditText) findViewById(R.id.event_name)).getText().toString();
-            System.out.println("Event Details");
-            System.out.println(actorName +" "+ eventName +"  "+ " "+ timeday + "  " +stage   );
 
             postData(type, actorName);
         }
@@ -152,7 +150,32 @@ public class MyActivity extends Activity implements AsynResponse {
             return null;
         } else {
             SenGetReqAsyncTask asyncTask = new SenGetReqAsyncTask(this);
-            asyncTask.execute(type, name);
+
+            String time = "";
+            String time_wed = "4/22/2015";
+            String time_thr = "4/23/2015";
+            String time_fri = "4/24/2015";
+            String time_sat = "4/25/2015";
+            String date_early, date_late;
+            if (timeday.equals("Wednesday")) {
+                 date_early = time_wed;
+                 date_late = time_thr;
+            } else if (timeday.equals("Thursday")) {
+                 date_early = time_thr;
+                 date_late = time_fri;
+            } else if (timeday.equals("Friday")) {
+                 date_early = time_fri;
+                 date_late = time_sat;
+            } else {
+                date_early = "";
+                date_late = "";
+            }
+
+            time += "startDate=" + date_early + "&endDate=" + date_late;
+
+            Log.d("time", time);
+
+            asyncTask.execute(type, name, date_early, date_late);
         }
         return "";
     }
@@ -184,17 +207,26 @@ public class MyActivity extends Activity implements AsynResponse {
         protected String doInBackground(String... params) {
             String type = params[0];
             String name = params[1];
+            String starttime = params[2];
+            String endtime = params[3];
 
             HttpClient client = new DefaultHttpClient();
             HttpGet request = new HttpGet();
             String hostName = "http://139.147.24.15:8000";
             String urlName = hostName += "/search/people/?android=true";
-            if (name.length() > 0) {
-                try {
+
+            try {
+                if (name.length() > 0) {
                     urlName += "&types=[" + type + "]&name=" + URLEncoder.encode(name, "UTF-8").replace("+", "%20");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    if (starttime.length() > 0 && endtime.length() > 0) {
+                        urlName += "&startDate="
+                                + URLEncoder.encode(starttime, "UTF-8").replace("+", "%20")
+                                + "&endDate="
+                                + URLEncoder.encode(endtime, "UTF-8").replace("+", "%20");
+                    }
                 }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
             Log.d("url", urlName);
             try {

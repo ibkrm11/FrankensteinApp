@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Bikram on 11/3/2014.
@@ -28,6 +29,10 @@ public class SearchResults extends ListActivity{
         result = getIntent().getStringExtra(EXTRA_RESULT);
         type = getIntent().getStringExtra(EXTRA_TYPE);
 
+        ArrayList<String> results;
+
+        title = "";
+
         if (type.equals("actor") || type.equals("role")) {
             title = "  Role   |   Event   |   Stage   |   Time";
         } else if (type.equals("crew")) {
@@ -36,9 +41,9 @@ public class SearchResults extends ListActivity{
             title = "No Result";
         }
 
-       ArrayList<String> results;
         results = parseJson(result);
 
+        Log.d("????", results.toString());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, results);
         setListAdapter(adapter);
