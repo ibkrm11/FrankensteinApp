@@ -163,7 +163,6 @@ public class SearchResults extends ListActivity{
                                 throw new RuntimeException("get html file instead of json");
                             }
                         }
-                        Log.d("any return?", stringBuilder.toString());
                         return stringBuilder.toString();
                     } catch (ClientProtocolException cpe) {
                         cpe.printStackTrace();
