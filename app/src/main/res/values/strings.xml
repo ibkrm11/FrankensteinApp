@@ -2,6 +2,7 @@
 <resources>
     <color name="cool">#CDC5BF</color>
     <string name="app_name">Frankenstein</string>
+    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string-array name="day_array">
         <item></item>
@@ -25,4 +26,6 @@
     <string name="day_choose">Select a Day</string>
     <string name="stage_choose">Select a Stage</string>
     <string name="search_time"> Search by Time</string>
+    <string name="search_results">Search Results</string>
+    <string name="title_activity_results">ResultsActivity</string>
 </resources>
