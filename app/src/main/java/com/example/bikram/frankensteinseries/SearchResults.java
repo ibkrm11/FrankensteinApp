@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -133,7 +134,7 @@ public class SearchResults extends ListActivity implements AsynResponse{
 
     @Override
     public void processFinish(String output){
-        Log.d("??",output);
+
     }
 
     private class SenGetReqAsyncTask extends AsyncTask<String, Void, String> {
