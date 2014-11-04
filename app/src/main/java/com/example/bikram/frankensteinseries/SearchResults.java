@@ -22,8 +22,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +69,7 @@ public class SearchResults extends ListActivity{
         setListAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        postData(actor,event,timeday);
+        postData("crew",actor);
 
     }
     /**
@@ -105,20 +110,26 @@ public class SearchResults extends ListActivity{
             return false;
     }
 
-    public void postData(String actor, String event, String date) {
+    public List<String> postData(String type, String name) {
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
-                String actor = params[0];
-                String event = params[1];
-                String date = params[2];
+                String type = params[0];
+                String name = params[1];
+
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
                 String hostName = "http://139.147.24.15:8000";
                 String urlName = hostName += "/search/people/?android=true";
-                if (actor.length() > 0) {
-                    urlName += "&types=[actor]&name=" + actor;
+                if (name.length() > 0) {
+                    try {
+                        Charset charset = Charset.forName(name);
+                        urlName += "&types=[" + type + "]&name=" + charset.name();
+                    } catch (IllegalCharsetNameException e) {
+                        e.printStackTrace();
+                    }
                 }
+                Log.d("url",urlName);
                 try {
                     request.setURI(new URI(urlName));
                     try {
@@ -161,8 +172,13 @@ public class SearchResults extends ListActivity{
                 return null;
             }
         }
-        SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
-        sendPostReqAsyncTask.execute(actor,"","");
+        if (type.length() <= 0) {
+            return null;
+        } else {
+            SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+            sendPostReqAsyncTask.execute(type, name);
+        }
+        return new ArrayList<String>();
     }
 
 }
