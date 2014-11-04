@@ -119,7 +119,7 @@ public class SearchResults extends ListActivity{
             return false;
     }
 
-    public List<String> postData(String type, String name) {
+    public String postData(String type, String name) {
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
@@ -185,7 +185,7 @@ public class SearchResults extends ListActivity{
             SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
             sendPostReqAsyncTask.execute(type, name);
         }
-        return new ArrayList<String>();
+        return "";
     }
 
 }
