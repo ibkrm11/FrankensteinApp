@@ -137,6 +137,7 @@ public class SearchResults extends ListActivity implements AsynResponse{
     @Override
     public void processFinish(String output){
 
+        parseJson(output);
     }
 
     private class SenGetReqAsyncTask extends AsyncTask<String, Void, String> {
@@ -211,4 +212,18 @@ public class SearchResults extends ListActivity implements AsynResponse{
         }
     }
 
+    public ArrayList<String> parseJson(String s){
+        ArrayList<String> arr = new ArrayList<String>();
+        String[] actor_desc= s.split("]]");
+        for(int i=0;i < actor_desc.length; i++){
+            //System.out.println(actor_desc[i]);
+            actor_desc[i] = actor_desc[i].replace(']','\n');
+            CharSequence cs;
+            actor_desc[i] = actor_desc[i].replace((CharSequence)"[[",(CharSequence)"\n");
+            System.out.println(actor_desc[i]);
+            System.out.println("----------------------------");
+        }
+
+        return arr;
+    }
 }
