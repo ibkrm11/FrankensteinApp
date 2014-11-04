@@ -61,7 +61,7 @@ public class SearchResults extends ListActivity{
         stage = getIntent().getStringExtra(EXTRA_STAGE);
         type = getIntent().getStringExtra(EXTRA_TYPE);
 
-        postData(type, actor);
+        List<String> results = postData(type, actor);
 
        /* ArrayList<String> results = new ArrayList<String>();
         results.add(actor);
@@ -69,11 +69,11 @@ public class SearchResults extends ListActivity{
         results.add(timeday);
         results.add(stage);*/
 
-        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, results);
         setListAdapter(adapter);
 
-        adapter.notifyDataSetChanged();*/
+        adapter.notifyDataSetChanged();
 
 
 
@@ -109,6 +109,7 @@ public class SearchResults extends ListActivity{
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
