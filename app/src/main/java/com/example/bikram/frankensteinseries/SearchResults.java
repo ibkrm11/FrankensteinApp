@@ -61,7 +61,7 @@ public class SearchResults extends ListActivity{
         stage = getIntent().getStringExtra(EXTRA_STAGE);
         type = getIntent().getStringExtra(EXTRA_TYPE);
 
-        List<String> results = postData(type, actor);
+        String result = postData(type, actor);
 
        /* ArrayList<String> results = new ArrayList<String>();
         results.add(actor);
@@ -69,11 +69,11 @@ public class SearchResults extends ListActivity{
         results.add(timeday);
         results.add(stage);*/
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, results);
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, result);
         setListAdapter(adapter);
 
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
 
 
 
@@ -119,6 +119,7 @@ public class SearchResults extends ListActivity{
         else
             return false;
     }
+
 
     public String postData(String type, String name) {
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
